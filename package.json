@@ -1,12 +1,12 @@
 {
-  "name": "telegram-web-app-passport",
+  "name": "passport-telegram-web-app",
   "version": "1.0.0",
   "description": "A [Passport](https://www.passportjs.org/) strategy for [telegram web app (bots)](https://core.telegram.org/bots/webapps) authentication.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "prepare": "husky install && npm run build",
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",

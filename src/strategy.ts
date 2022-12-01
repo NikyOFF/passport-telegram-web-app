@@ -5,13 +5,13 @@ import { ExtractData } from "./extract-data.class";
 import { ExtractHash } from "./extract-hash.class";
 import { Utils } from "./utils";
 
-import { DataFromRequestFunction } from "./interfaces/data-from-request.function";
-import { HashFromRequestFunction } from "./interfaces/hash-from-request.function";
-import { DataToCheckStringFunction } from "./interfaces/data-to-check-string.function";
 import { StrategyOptions } from "./interfaces/strategy-options.interface";
-import { HashVerifierFunction } from "./interfaces/hash-verifier.function";
-import { VerifyCallback } from "./interfaces/verify-callback.function";
-import { VerifyCallbackWithRequest } from "./interfaces/verify-callback-with-request.function";
+import { DataFromRequestFunction } from "./types/data-from-request.function";
+import { HashFromRequestFunction } from "./types/hash-from-request.function";
+import { DataToCheckStringFunction } from "./types/data-to-check-string.function";
+import { HashVerifierFunction } from "./types/hash-verifier.function";
+import { VerifyCallback } from "./types/verify-callback.function";
+import { VerifyCallbackWithRequest } from "./types/verify-callback-with-request.function";
 
 export class Strategy extends StrategyInterface {
   public readonly name: string;
@@ -20,10 +20,7 @@ export class Strategy extends StrategyInterface {
   public readonly dataToCheckString: DataToCheckStringFunction;
   public readonly hashVerifier: HashVerifierFunction;
 
-  public constructor(options: StrategyOptions, verify: VerifyCallback);
-  public constructor(options: StrategyOptions, verify: VerifyCallbackWithRequest);
-
-  public constructor(public readonly options: StrategyOptions, public readonly verify: any) {
+  public constructor(public readonly options: StrategyOptions, public readonly verify: any | VerifyCallback | VerifyCallbackWithRequest) {
     super();
 
     this.name = STRATEGY_NAME;
@@ -50,7 +47,7 @@ export class Strategy extends StrategyInterface {
         return this.fail(error, 401);
       }
 
-      if (this.options.expiration && Date.now() / 1000 - parseInt(data.authDate) > this.options.expiration) {
+      if (this.options.expiration && (Date.now() / 1000) - parseInt(data.authDate, 10) > this.options.expiration) {
         return this.fail(new Error("Expired"), 401);
       }
 

@@ -1,7 +1,7 @@
 import { enc, HmacSHA256 } from "crypto-js";
 
 import { DataInterface } from "./interfaces/data.interface";
-import { HashVerifierCallbackFunction } from "./interfaces/hash-verifier-callback.function";
+import { HashVerifierCallbackFunction } from "./types/hash-verifier-callback.function";
 
 export class Utils {
   public static defaultDataToCheckString(data: DataInterface): string {
