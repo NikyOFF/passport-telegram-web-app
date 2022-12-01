@@ -104,7 +104,7 @@ app.post('/ping', passport.authenticate('telegram-web-app', { session: false }),
 ```ts
 import { Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { Strategy, WebAppUser } from "passport-telegram-web-app";
+import { Strategy, WebAppUserInterface } from "passport-telegram-web-app";
 
 @Injectable()
 export class TelegramWebAppStrategy extends PassportStrategy(Strategy) {
@@ -114,7 +114,7 @@ export class TelegramWebAppStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(webAppUser: WebAppUser): Promise<any> {
+    async validate(webAppUser: WebAppUserInterface): Promise<any> {
         return webAppUser;
     }
 }
