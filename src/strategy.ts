@@ -20,7 +20,10 @@ export class Strategy extends StrategyInterface {
   public readonly dataToCheckString: DataToCheckStringFunction;
   public readonly hashVerifier: HashVerifierFunction;
 
-  public constructor(public readonly options: StrategyOptions, public readonly verify: any | VerifyCallback | VerifyCallbackWithRequest) {
+  public constructor(
+    public readonly options: StrategyOptions,
+    public readonly verify: any | VerifyCallback | VerifyCallbackWithRequest,
+  ) {
     super();
 
     this.name = STRATEGY_NAME;
@@ -47,7 +50,7 @@ export class Strategy extends StrategyInterface {
         return this.fail(error, 401);
       }
 
-      if (this.options.expiration && (Date.now() / 1000) - parseInt(data.authDate, 10) > this.options.expiration) {
+      if (this.options.expiration && Date.now() / 1000 - parseInt(data.authDate, 10) > this.options.expiration) {
         return this.fail(new Error("Expired"), 401);
       }
 

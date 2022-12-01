@@ -1,6 +1,6 @@
 {
   "name": "passport-telegram-web-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A [Passport](https://www.passportjs.org/) strategy for [telegram web app (bots)](https://core.telegram.org/bots/webapps) authentication.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,7 @@
     "postversion": "git push && git push --tags",
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json"
   },
   "repository": {
