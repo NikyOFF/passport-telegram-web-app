@@ -93,10 +93,87 @@ For understanding read [how validate data received via the Web App](https://core
 Use passport.authenticate() specifying 'telegram-web-app' as the strategy.
 
 ### Express
+
+1. Create an express JS server
+
 ```ts
-app.post('/ping', passport.authenticate('telegram-web-app', { session: false }), (request, response) => {
-    response.send('pong!');
-});
+import Express from  'express'
+import passport from 'passport'
+import { Strategy, VerifyCallback, WebAppUserInterface } from 'passport-telegram-web-app'
+import dotenv from 'dotenv'
+dotenv.config()
+
+const BOT_KEY = process.env.BOT_KEY
+
+if (BOT_KEY === undefined) {
+  throw Error('BOT_KEY not provided')
+}
+
+const verifyCallback: VerifyCallback = (payload: WebAppUserInterface, done) => {
+  console.log('payload', payload)
+  return done(null, payload)
+}
+
+passport.use(new Strategy({
+  token: BOT_KEY
+}, verifyCallback))
+
+const requireAuth = passport.authenticate('telegram-web-app', { session: false })
+
+const app = Express()
+
+app.get('/ping', requireAuth, (req, resp) =>  {
+  resp.send('pong')
+})
+
+
+app.listen(3001)
+```
+
+2. Call GET `/ping` with `tg-web-app-auth-date`, `tg-web-app-query-id`, `tg-web-app-user` and `tg-web-app-hash` headers
+
+```ts
+import querystring from 'querystring'
+import dotenv from 'dotenv'
+dotenv.config()
+
+async function main() {
+  // As read from WebApp.initData
+  const initData = process.env.INIT_DATA
+  if (initData === undefined) {
+    throw Error('INIT_DATA not provided')
+  }
+
+  const parsedData = querystring.parse(initData)
+
+  const authDate = parsedData.auth_date
+  const queryId = parsedData.query_id
+  const user = parsedData.user
+  const hash = parsedData.hash
+
+  if (
+    typeof(authDate) !== 'string'
+      || typeof(queryId) !== 'string'
+      || typeof(user) !== 'string'
+      || typeof(hash) !== 'string'
+  ) {
+    throw Error('params not valid')
+  }
+
+  const resp = await fetch('http://localhost:3001/ping', {
+    headers: {
+      'tg-web-app-auth-date': authDate,
+      'tg-web-app-query-id': queryId,
+      'tg-web-app-user': user,
+      'tg-web-app-hash': hash
+    }
+  })
+
+  const result = await resp.text()
+  console.log('result', result)
+}
+
+main()
 ```
 
 ### NestJS
